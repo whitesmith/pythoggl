@@ -1,7 +1,7 @@
 from togglexceptions import *
 import requests
 import base64
-import json
+from models import Workspace, Project
 
 
 class TogglWrapper:
@@ -30,4 +30,16 @@ class TogglWrapper:
         return requests.get(self.TOGGL_URL+'/me',auth=self.auth)
 
     def workspaces(self):
-        return requests.get(self.TOGGL_URL+'/workspaces',auth=self.auth)
+        workspaces = []
+        response = requests.get(self.TOGGL_URL+'/workspaces',auth=self.auth)
+        for workspace in response.json():
+            workspaces.append(Workspace(workspace))
+        return workspaces
+
+    def projects_for_workspace(self,id):
+        projects = []
+        response = requests.get(self.TOGGL_URL+'/workspaces/'+str(id)+'/projects',auth=self.auth)
+        if response.json() is None : return []
+        for project in response.json():
+            projects.append(Project(project))
+        return projects

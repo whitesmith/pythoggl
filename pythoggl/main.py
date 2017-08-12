@@ -10,4 +10,7 @@ if __name__ == '__main__' and __package__ is None:
 from togglwrapper import *
 
 wrapper = TogglWrapper('','')
-print(wrapper.workspaces().text)
+
+for workspace in wrapper.workspaces():
+    for project in wrapper.projects_for_workspace(workspace.id):
+        print(project.name)
